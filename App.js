@@ -5,6 +5,7 @@ import {
 } from 'expo'
 import { Container, Content, List, ListItem, Text } from 'native-base';
 import Main from './present/main'
+import Login from './present/login'
 import ChanceInfo from './present/chanceInfo'
 
 import {
@@ -15,7 +16,8 @@ import {
 
 const Router = createRouter(() => ({
   main: () => Main,
-  ChanceInfo: () => ChanceInfo,
+  chanceInfo: () => ChanceInfo,
+  login: () => Login,
 }));
 
 
@@ -51,7 +53,7 @@ export default class App extends React.Component {
 
     return (
       <NavigationProvider router={Router}>
-        <StackNavigation initialRoute={Router.getRoute('main')} />
+        <StackNavigation initialRoute={'login'} />
       </NavigationProvider>
     );
   }

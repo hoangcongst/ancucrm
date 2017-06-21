@@ -1,0 +1,1 @@
+export const API_HOST = 'http://apicrm.vietnambiz.com/v2/'

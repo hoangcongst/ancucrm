@@ -1,19 +1,28 @@
 import React from 'react';
-import { Container, Content, List, ListItem, Text, Drawer } from 'native-base';
+import { Container, Content, List, ListItem, Text, Drawer, H2, Right, Icon, Body } from 'native-base';
+import { View } from 'react-native'
 import HeaderModule from './module/header'
 import SideBar from './module/sidebar'
 
 export default class Main extends React.Component {
   handlePress = () => {
-    this.props.navigator.push('ChanceInfo');
+    this.props.navigator.push('chanceInfo');
   }
 
   printChances() {
     var print = []
     for (i = 0; i < 300; i++) {
       print.push(
-        <ListItem key={i}>
-          <Text onPress={this.handlePress}>Simon Mignolet{"\n"}Simon Mignolet</Text>
+        <ListItem key={i} onPress={this.handlePress}>
+          <Body>
+            <H2>ten du an</H2>
+            <Text>Nguoi nhan du an</Text>
+          </Body>
+
+          <Right>
+            <Text>28/2/2017</Text>
+            <Icon name="arrow-forward" />
+          </Right>
         </ListItem>
       )
     }
