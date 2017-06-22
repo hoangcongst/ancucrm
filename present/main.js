@@ -1,35 +1,53 @@
 import React from 'react';
-import { Container, Content, List, ListItem, Text, Drawer, H2, Right, Icon, Body } from 'native-base';
-import { View } from 'react-native'
+import { Container, Content, List, ListItem, Text, Drawer, H2, Right, Icon, Body, Toast } from 'native-base';
+import { View, AsyncStorage, FlatList } from 'react-native'
 import HeaderModule from './module/header'
 import SideBar from './module/sidebar'
-
+import * as API from '../config/API'
 export default class Main extends React.Component {
-  handlePress = () => {
-    this.props.navigator.push('chanceInfo');
+  constructor(props) {
+    super(props)
+    this.state = {
+      sessionId: '',
+      listChances: []
+    }
   }
 
-  printChances() {
-    var print = []
-    for (i = 0; i < 300; i++) {
-      print.push(
-        <ListItem key={i} onPress={this.handlePress}>
-          <Body>
-            <H2>ten du an</H2>
-            <Text>Nguoi nhan du an</Text>
-          </Body>
-
-          <Right>
-            <Text>28/2/2017</Text>
-            <Icon name="arrow-forward" />
-          </Right>
-        </ListItem>
-      )
+  async componentWillMount() {
+    try {
+      const value = await AsyncStorage.getItem('@ancucrm:sessionId');
+      if (value !== null) {
+        let data = await API.fetchPotentials(value)
+        if (data.success === true)
+          this.setState({
+            sessionId: value,
+            listChances: data.result
+          })
+        // else {
+        //   Toast.show({
+        //     supportedOrientations: ['portrait', 'landscape'],
+        //     text: 'Lỗi kết nối!',
+        //     position: 'bottom',
+        //   })
+        // }
+      }
+    } catch (error) {
+      // Error retrieving data
     }
+  }
 
-    return (
-      print
-    )
+  onEndReached = () => {
+    console.log('onEndReached')
+    // let data = await API.fetchPotentials(this.state.sessionId, this.state.listChances.length)
+    // if (data.success === true) {
+    //   this.setState({
+    //     listChances: [...this.state.listChances, ...data.result]
+    //   })
+    // }
+  }
+
+  handlePress = () => {
+    this.props.navigator.push('chanceInfo');
   }
 
   //sidebar
@@ -39,6 +57,21 @@ export default class Main extends React.Component {
   openDrawer = () => {
     this.drawer._root.open()
   };
+
+  _keyExtractor = (item, index) => item.id;
+  _renderItem = () => {
+    <View>
+      <Body>
+        <H2>{obj.potentialname}</H2>
+        <Text>{obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
+      </Body>
+
+      <Right>
+        <Text>{obj.modifiedtime}</Text>
+        <Icon name="arrow-forward" />
+      </Right>
+    </View>
+  }
 
   render() {
     return (
@@ -50,9 +83,29 @@ export default class Main extends React.Component {
           content={<SideBar navigator={this.navigator} />}
           onClose={() => this.closeDrawer()} >
           <Content>
-            <List>
-              {this.printChances()}
-            </List>
+            <FlatList
+              data={this.state.listChances}
+              keyExtractor={this._keyExtractor}
+              renderItem={this._renderItem}
+            />
+
+            {/*<List onEndReached={this.onEndReached} onEndReachedThreshold={0}>
+              {this.state.listChances.map(
+                (obj, i) => {
+                  return <ListItem key={i} onPress={this.handlePress}>
+                    <Body>
+                      <H2>{obj.potentialname}</H2>
+                      <Text>{obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
+                    </Body>
+
+                    <Right>
+                      <Text>{obj.modifiedtime}</Text>
+                      <Icon name="arrow-forward" />
+                    </Right>
+                  </ListItem>
+                }
+              )}
+            </List>*/}
           </Content>
         </Drawer>
       </Container>

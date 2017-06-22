@@ -1,4 +1,4 @@
-import { API_HOST } from './config'
+import { API_HOST, API_HOST_V2 } from './config'
 import base64 from 'base-64'
 let myHeaders = new Headers();
 const authen_user = 'vtiger_crm'
@@ -11,13 +11,14 @@ let myInit = {
     cache: 'default'
 };
 
-export function fetchLeads(data) {
-    return fetch(API_HOST + 'leads' + page, myInit)
+export function fetchPotentials(sessionName, offset=0) {
+    return fetch(API_HOST + 'potentials?limit=20&order_way=desc' + 
+        '&order_by=potential_no&sessionName=' + sessionName + '&offset=' + offset, myInit)
         .then(response => response.json())
 }
 
 export function logIn(user, pass, callback) {
-    return fetch(API_HOST + 'login?username=' + user + '&password=' + pass, myInit)
+    return fetch(API_HOST_V2 + 'login?username=' + user + '&password=' + pass, myInit)
         .then(response => response.json()).then((response) => callback(response))
 }
 

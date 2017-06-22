@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Item, Input, Container, Content, Button, Text } from 'native-base';
+import { AsyncStorage } from 'react-native'
 import HeaderModule from './module/header'
 import SideBar from './module/sidebar'
 import * as API from '../config/API'
@@ -15,7 +16,15 @@ export default class Login extends React.Component {
   checkLogin = (data) => {
     if (data.success === true) {
       this.props.navigator.push('main');
+      try {
+        AsyncStorage.setItem('@ancucrm:sessionId', data.result.sessionName);
+      } catch (error) {
+        console.log('catch error')
+        console.log(error)
+      }
     }
+    else
+      console.log('error user')
   }
 
   handlePress = () => {
