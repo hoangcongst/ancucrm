@@ -4,6 +4,7 @@ let myHeaders = new Headers();
 const authen_user = 'vtiger_crm'
 const authen_pass = 'vtiger_crm#@!'
 myHeaders.append('Authorization', 'Basic ' + base64.encode(authen_user + ":" + authen_pass))
+myHeaders.append('Content-Type', 'application/json', )
 let myInit = {
     method: 'GET',
     headers: myHeaders,
@@ -11,8 +12,8 @@ let myInit = {
     cache: 'default'
 };
 
-export function fetchPotentials(sessionName, offset=0) {
-    return fetch(API_HOST + 'potentials?limit=20&order_way=desc' + 
+export function fetchPotentials(sessionName, offset = 0) {
+    return fetch(API_HOST + 'potentials?limit=10&order_way=desc' +
         '&order_by=potential_no&sessionName=' + sessionName + '&offset=' + offset, myInit)
         .then(response => response.json())
 }
@@ -22,14 +23,26 @@ export function logIn(user, pass, callback) {
         .then(response => response.json()).then((response) => callback(response))
 }
 
-export function register(action) {
-    return fetch(API_HOST + '/api/user/register', {
-        method: 'post',
-        body: action.formData,
-        mode: 'cors'
-    })
+export function fetchHistory(moduleName, crmid, sessionId) {
+    return fetch(API_HOST + 'histories/list?moduleName=' + moduleName + '&crmid=' + crmid
+        + '&sessionName=' + sessionId, myInit)
         .then(response => response.json())
 }
+
+export function fetchComment(moduleName, crmid, sessionId) {
+    return fetch(API_HOST + 'histories/list', myInit)
+        .then(response => response.json())
+}
+
+export function fetchActivity(data) {
+    return fetch(API_HOST + 'vtiger_crm/activities', JSON.stringify(data))
+        .then(response => response.json())
+}
+
+
+
+
+
 
 export function getOwnerUser(api_token) {
     return fetch(API_HOST + '/api/user?api_token=' + api_token, myInit)

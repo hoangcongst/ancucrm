@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Content, List, ListItem, Text, Drawer, H2, Right, Icon, Body, Toast } from 'native-base';
-import { View, AsyncStorage, FlatList } from 'react-native'
+import { View, AsyncStorage } from 'react-native'
 import HeaderModule from './module/header'
 import SideBar from './module/sidebar'
 import * as API from '../config/API'
@@ -46,8 +46,8 @@ export default class Main extends React.Component {
     // }
   }
 
-  handlePress = () => {
-    this.props.navigator.push('chanceInfo');
+  handlePress(obj) {
+    this.props.navigator.push('chanceInfo', { obj: obj });
   }
 
   //sidebar
@@ -83,16 +83,10 @@ export default class Main extends React.Component {
           content={<SideBar navigator={this.navigator} />}
           onClose={() => this.closeDrawer()} >
           <Content>
-            <FlatList
-              data={this.state.listChances}
-              keyExtractor={this._keyExtractor}
-              renderItem={this._renderItem}
-            />
-
-            {/*<List onEndReached={this.onEndReached} onEndReachedThreshold={0}>
+            <List onEndReached={this.onEndReached} onEndReachedThreshold={0}>
               {this.state.listChances.map(
                 (obj, i) => {
-                  return <ListItem key={i} onPress={this.handlePress}>
+                  return <ListItem key={i} onPress={e => this.handlePress(obj)}>
                     <Body>
                       <H2>{obj.potentialname}</H2>
                       <Text>{obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
@@ -105,7 +99,7 @@ export default class Main extends React.Component {
                   </ListItem>
                 }
               )}
-            </List>*/}
+            </List>
           </Content>
         </Drawer>
       </Container>
