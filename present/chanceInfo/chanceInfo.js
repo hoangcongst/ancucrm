@@ -1,14 +1,15 @@
 import React from 'react';
 import { Container, Content, List, ListItem, Text, H2 } from 'native-base';
 import { View, AsyncStorage } from 'react-native'
-import HeaderModule from './module/header'
-import * as API from '../config/API'
+import HeaderModule from '../module/header'
+import * as API from '../../config/API'
 export default class ChanceInfo extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       history: [],
-      activityCount: 0
+      comments: [],
+      activity: []
     }
   }
 
@@ -17,20 +18,28 @@ export default class ChanceInfo extends React.Component {
     if (sessionId !== null) {
       let obj = this.props.obj
       let history = await API.fetchHistory('Potentials', obj.id, sessionId)
-      let activityCount = await API.fetchActivity({
+      let comments = await API.fetchComment(obj.id, sessionId)
+      let activity = await API.fetchActivity({
         sessionName: sessionId,
         idRecord: obj.id,
-        count: 'yes'
       })
+
       this.setState({
         history: history,
-        activityCount: activityCount
+        comments: comments.result,
+        activity: activity
       })
     }
   }
 
   render() {
     let obj = this.props.obj
+    obj.contact_info = obj.contact_info === undefined ? {
+      firstname: '', lastname: ''
+      , email: '', mobile: ''
+    } : obj.contact_info
+
+    obj.assign_info = obj.assign_info === undefined ? {} : obj.assign_info
     return (
       <Container>
         <HeaderModule title='Chi tiết cơ hội' />
@@ -52,9 +61,12 @@ export default class ChanceInfo extends React.Component {
             <Text>Mô tả: {obj.description}</Text>
           </Content>
           <Content>
-            <Text>Hoạt động: {this.state.activityCount}</Text>
-            <Text>Bình luận: {obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
-            <Text>Lịch sử: {this.state.history.length}</Text>
+            <Text onPress={() => this.props.navigator.push('specificInfo', { data: this.state.activity, 
+              type: 2, title: 'Hoạt động' })}>Hoạt động: {this.state.activity.length}</Text>
+            <Text>Bình luận: {this.state.comments.length}</Text>
+            <Text onPress={() => this.props.navigator.push('specificInfo', { data: this.state.history, 
+              type: 1, title: 'Lịch sử' })}>
+              Lịch sử: {this.state.history.length}</Text>
           </Content>
         </Content>
       </Container>

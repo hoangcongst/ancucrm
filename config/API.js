@@ -12,8 +12,19 @@ let myInit = {
     cache: 'default'
 };
 
+//existedParam boolean to check insert "?" at first or not
+function parseGetParams(existedParam, obj) {
+    let toReturn = ''
+    for (let key in obj) {
+        toReturn += '&' + key + '=' + obj[key]
+    }
+    if (existedParam)
+        toReturn = '?' + toReturn.substr(1)
+    return toReturn
+}
+
 export function fetchPotentials(sessionName, offset = 0) {
-    return fetch(API_HOST + 'potentials?limit=10&order_way=desc' +
+    return fetch(API_HOST + 'potentials?limit=20&order_way=desc' +
         '&order_by=potential_no&sessionName=' + sessionName + '&offset=' + offset, myInit)
         .then(response => response.json())
 }
@@ -29,13 +40,14 @@ export function fetchHistory(moduleName, crmid, sessionId) {
         .then(response => response.json())
 }
 
-export function fetchComment(moduleName, crmid, sessionId) {
-    return fetch(API_HOST + 'histories/list', myInit)
+export function fetchComment(crmid, sessionId) {
+    return fetch(API_HOST + 'vtiger_crm/comments?id_record=' + crmid + '&sessionName=' + sessionId, myInit)
         .then(response => response.json())
 }
 
 export function fetchActivity(data) {
-    return fetch(API_HOST + 'vtiger_crm/activities', JSON.stringify(data))
+    // myInit.body = JSON.stringify(data)
+    return fetch(API_HOST + 'vtiger_crm/activities' + parseGetParams(true, data), myInit, data)
         .then(response => response.json())
 }
 

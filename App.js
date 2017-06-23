@@ -6,8 +6,8 @@ import {
 import { Container, Content, List, ListItem, Text } from 'native-base';
 import Main from './present/main'
 import Login from './present/login'
-import ChanceInfo from './present/chanceInfo'
-
+import ChanceInfo from './present/chanceInfo/chanceInfo'
+import SpecificInfo from './present/chanceInfo/specificInfo'
 import {
   createRouter,
   NavigationProvider,
@@ -18,6 +18,7 @@ const Router = createRouter(() => ({
   main: () => Main,
   chanceInfo: () => ChanceInfo,
   login: () => Login,
+  specificInfo: () => SpecificInfo,
 }));
 
 

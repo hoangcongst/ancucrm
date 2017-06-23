@@ -1,6 +1,6 @@
 import React from 'react';
-import { Container, Content, ListItem, Text, Drawer, H2, Right, Icon, Body, Toast } from 'native-base';
-import { View, AsyncStorage, FlatList } from 'react-native'
+import { Container, Content, List, ListItem, Text, Drawer, H2, Right, Icon, Body, Toast } from 'native-base';
+import { View, AsyncStorage } from 'react-native'
 import HeaderModule from './module/header'
 import SideBar from './module/sidebar'
 import * as API from '../config/API'
@@ -36,14 +36,14 @@ export default class Main extends React.Component {
     }
   }
 
-  onEndReached = async () => {
+  onEndReached = () => {
     console.log('onEndReached')
-    let data = await API.fetchPotentials(this.state.sessionId, this.state.listChances.length)
-    if (data.success === true) {
-      this.setState({
-        listChances: [...this.state.listChances, ...data.result]
-      })
-    }
+    // let data = await API.fetchPotentials(this.state.sessionId, this.state.listChances.length)
+    // if (data.success === true) {
+    //   this.setState({
+    //     listChances: [...this.state.listChances, ...data.result]
+    //   })
+    // }
   }
 
   handlePress(obj) {
@@ -58,19 +58,19 @@ export default class Main extends React.Component {
     this.drawer._root.open()
   };
 
-  _keyExtractor = (item, index) => index;
-
-  _renderItem = ({ item }) => {
-    return <ListItem onPress={e => this.handlePress(item)}>
+  _keyExtractor = (item, index) => item.id;
+  _renderItem = () => {
+    <View>
       <Body>
-        <H2>{item.potentialname}</H2>
-        <Text>{item.assign_info.first_name + ' ' + item.assign_info.last_name}</Text>
+        <H2>{obj.potentialname}</H2>
+        <Text>{obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
       </Body>
+
       <Right>
-        <Text>{item.modifiedtime}</Text>
+        <Text>{obj.modifiedtime}</Text>
         <Icon name="arrow-forward" />
       </Right>
-    </ListItem>
+    </View>
   }
 
   render() {
@@ -82,11 +82,25 @@ export default class Main extends React.Component {
           ref={(ref) => { this.drawer = ref; }}
           content={<SideBar navigator={this.navigator} />}
           onClose={() => this.closeDrawer()} >
-            <FlatList data={this.state.listChances} onEndReached={this.onEndReached}
-              onEndReachedThreshold={0.5}
-              keyExtractor={this._keyExtractor}
-              renderItem={this._renderItem}
-            />
+          <Content>
+            <List onEndReached={this.onEndReached()} onEndReachedThreshold={5}>
+              {this.state.listChances.map(
+                (obj, i) => {
+                  return <ListItem key={i} onPress={e => this.handlePress(obj)}>
+                    <Body>
+                      <H2>{obj.potentialname}</H2>
+                      <Text>{obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
+                    </Body>
+
+                    <Right>
+                      <Text>{obj.modifiedtime}</Text>
+                      <Icon name="arrow-forward" />
+                    </Right>
+                  </ListItem>
+                }
+              )}
+            </List>
+          </Content>
         </Drawer>
       </Container>
     );
