@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Content, List, ListItem, Text, H2 } from 'native-base';
+import { Container, Content, List, ListItem, Text, H2, H3 } from 'native-base';
 import { View, AsyncStorage } from 'react-native'
 import HeaderModule from '../module/header'
 import * as API from '../../config/API'
@@ -43,30 +43,39 @@ export default class ChanceInfo extends React.Component {
     return (
       <Container>
         <HeaderModule title='Chi tiết cơ hội' />
-        <Content>
+        <Content style={{
+          backgroundColor: '#efeeea'
+        }}>
           <H2>
             {obj.proten}
           </H2>
           <Content style={style.jumbotron}>
-            <H2>Khách hàng</H2>
-            <Text>{obj.contact_info.firstname + ' ' + obj.contact_info.lastname}</Text>
-            <Text>{obj.contact_info.email}</Text>
-            <Text>{obj.contact_info.mobile}</Text>
+            <H3 style={style.info}>Khách hàng</H3>
+            <Text style={style.info}>{obj.contact_info.firstname + ' ' + obj.contact_info.lastname}</Text>
+            <View style={style.lineSeparate} />
+            <Text style={style.info}>{obj.contact_info.email}</Text>
+            <View style={style.lineSeparate} />
+            <Text style={style.info}>{obj.contact_info.mobile}</Text>
           </Content>
           <Content style={style.jumbotron}>
-            <H2>Thông tin</H2>
-            <Text>Ngày tạo: {obj.createdtime}</Text>
-            <Text>Ngày sửa: {obj.modifiedtime}</Text>
-            <Text>Giao cho: {obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
-            <Text>Mô tả: {obj.description}</Text>
+            <H3 style={style.info}>Thông tin</H3>
+            <Text style={style.info}>Ngày tạo: {obj.createdtime}</Text>
+            <View style={style.lineSeparate} />
+            <Text style={style.info}>Ngày sửa: {obj.modifiedtime}</Text>
+            <View style={style.lineSeparate} />
+            <Text style={style.info}>Giao cho: {obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
+            <View style={style.lineSeparate} />
+            <Text style={style.info}>Mô tả: {obj.description}</Text>
           </Content>
           <Content style={style.jumbotron}>
-            <Text onPress={() => this.props.navigator.push('specificInfo', {
+            <Text style={style.info} onPress={() => this.props.navigator.push('specificInfo', {
               data: this.state.activity,
               type: 2, title: 'Hoạt động'
             })}>Hoạt động: {this.state.activity.length}</Text>
-            <Text>Bình luận: {this.state.comments.length}</Text>
-            <Text onPress={() => this.props.navigator.push('specificInfo', {
+            <View style={style.lineSeparate} />
+            <Text style={style.info}>Bình luận: {this.state.comments.length}</Text>
+            <View style={style.lineSeparate} />
+            <Text style={style.info} onPress={() => this.props.navigator.push('specificInfo', {
               data: this.state.history,
               type: 1, title: 'Lịch sử'
             })}>
@@ -81,16 +90,19 @@ export default class ChanceInfo extends React.Component {
 const style = {
   jumbotron: {
     borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#e2dfd9',
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowRadius: 5,
-    shadowOpacity: 0.3,
+    padding: 10,
     backgroundColor: '#ffffff',
-    margin: 10
+    marginTop: 5,
+    marginBottom: 5,
+    marginRight: 10,
+    marginLeft: 10
+  },
+
+  info: {
+    margin: 7
+  },
+  lineSeparate: {
+    borderTopWidth: 0.5,
+    borderColor: "#CED0CE"
   }
 }
