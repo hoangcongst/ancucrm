@@ -4,7 +4,7 @@ import {
     CheckBox, Header, Left, Right, Body
 } from 'native-base';
 import { withNavigation } from '@expo/ex-navigation';
-
+import { COLOR_YELLOW_HARD } from '../../config/config'
 @withNavigation
 export default class HeaderModule extends Component {
     leftButton() {
@@ -19,7 +19,9 @@ export default class HeaderModule extends Component {
     }
     render() {
         return (
-            <Header>
+            <Header style={{
+                backgroundColor: '#f4a742'
+            }}>
                 <Left>
                     {this.leftButton()}
                 </Left>

@@ -47,29 +47,50 @@ export default class ChanceInfo extends React.Component {
           <H2>
             {obj.proten}
           </H2>
-          <Content>
+          <Content style={style.jumbotron}>
             <H2>Khách hàng</H2>
             <Text>{obj.contact_info.firstname + ' ' + obj.contact_info.lastname}</Text>
             <Text>{obj.contact_info.email}</Text>
             <Text>{obj.contact_info.mobile}</Text>
           </Content>
-          <Content>
+          <Content style={style.jumbotron}>
             <H2>Thông tin</H2>
             <Text>Ngày tạo: {obj.createdtime}</Text>
             <Text>Ngày sửa: {obj.modifiedtime}</Text>
             <Text>Giao cho: {obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
             <Text>Mô tả: {obj.description}</Text>
           </Content>
-          <Content>
-            <Text onPress={() => this.props.navigator.push('specificInfo', { data: this.state.activity, 
-              type: 2, title: 'Hoạt động' })}>Hoạt động: {this.state.activity.length}</Text>
+          <Content style={style.jumbotron}>
+            <Text onPress={() => this.props.navigator.push('specificInfo', {
+              data: this.state.activity,
+              type: 2, title: 'Hoạt động'
+            })}>Hoạt động: {this.state.activity.length}</Text>
             <Text>Bình luận: {this.state.comments.length}</Text>
-            <Text onPress={() => this.props.navigator.push('specificInfo', { data: this.state.history, 
-              type: 1, title: 'Lịch sử' })}>
+            <Text onPress={() => this.props.navigator.push('specificInfo', {
+              data: this.state.history,
+              type: 1, title: 'Lịch sử'
+            })}>
               Lịch sử: {this.state.history.length}</Text>
           </Content>
         </Content>
       </Container>
     );
+  }
+}
+
+const style = {
+  jumbotron: {
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#e2dfd9',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    backgroundColor: '#ffffff',
+    margin: 10
   }
 }
