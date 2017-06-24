@@ -66,7 +66,7 @@ export default class ChanceInfo extends React.Component {
             <Text style={style.info}>Giao cho: {obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
             <View style={style.lineSeparate} />
             <Text style={style.info}>Mô tả: {obj.description}</Text>
-          </Content>
+          </Content>update
           <Content style={style.jumbotron}>
             <Text style={style.info} onPress={() => this.props.navigator.push('specificInfo', {
               data: this.state.activity,
