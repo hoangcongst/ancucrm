@@ -28,11 +28,11 @@ export default class HeaderModule extends Component {
                 <Body>
                     <Title>{this.props.title}</Title>
                 </Body>
-                {/*<Right>
+                <Right>
                     <Button transparent>
-                        <Icon name='arrow-back' />
+                        <Icon name='ios-add' />
                     </Button>
-                </Right>*/}
+                </Right>
             </Header>
         );
     }

@@ -1,6 +1,12 @@
 import React from 'react';
-import { Container, Content, ListItem, Text, Drawer, H3, Right, Icon, Body, Toast } from 'native-base';
-import { View, AsyncStorage, FlatList, ActivityIndicator } from 'react-native'
+import {
+  Container, Content, ListItem, Text, Drawer, H3, Right, Icon,
+  Body, Toast, InputGroup, Input, Button, Tab, Tabs
+} from 'native-base';
+import {
+  View, AsyncStorage, FlatList, ActivityIndicator,
+  TouchableHighlight, Modal
+} from 'react-native'
 import HeaderModule from './module/header'
 import SideBar from './module/sidebar'
 import * as API from '../config/API'
@@ -10,34 +16,38 @@ export default class Main extends React.Component {
     this.state = {
       loading: true,
       sessionId: '',
-      listChances: []
+      listChances: [],
+      name: 'Loading...',
+      email: 'Loading...',
+      modalVisible: false,
     }
   }
 
   async componentWillMount() {
     try {
       const value = await AsyncStorage.getItem('@ancucrm:sessionId');
+      const name = await AsyncStorage.getItem('@ancucrm:name');
+      const email = await AsyncStorage.getItem('@ancucrm:email');
+
       if (value !== null) {
         let data = await API.fetchPotentials(value)
         if (data.success === true)
           this.setState({
             loading: false,
             sessionId: value,
-            listChances: data.result
+            listChances: data.result,
+            name: name,
+            email: email,
           })
-        // else {
-        //   Toast.show({
-        //     supportedOrientations: ['portrait', 'landscape'],
-        //     text: 'Lỗi kết nối!',
-        //     position: 'bottom',
-        //   })
-        // }
       }
     } catch (error) {
-      // Error retrieving data
     }
   }
 
+  /*
+  * List chances functions 
+  *
+  */
   onEndReached = async () => {
     this.setState({ loading: true })
     let data = await API.fetchPotentials(this.state.sessionId, this.state.listChances.length)
@@ -52,14 +62,6 @@ export default class Main extends React.Component {
   handlePress(obj) {
     this.props.navigator.push('chanceInfo', { obj: obj });
   }
-
-  //sidebar
-  closeDrawer = () => {
-    this.drawer._root.close()
-  };
-  openDrawer = () => {
-    this.drawer._root.open()
-  };
 
   _keyExtractor = (item, index) => index;
 
@@ -104,6 +106,20 @@ export default class Main extends React.Component {
     );
   };
 
+  //sidebar
+  closeDrawer = () => {
+    this.drawer._root.close()
+  };
+  openDrawer = () => {
+    this.drawer._root.open()
+  };
+
+  //start popover functions
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+  //end popover function
+
   render() {
     return (
       <Container>
@@ -111,8 +127,19 @@ export default class Main extends React.Component {
           openDrawer={this.openDrawer.bind(this)} closeDrawer={this.closeDrawer.bind(this)} />
         <Drawer
           ref={(ref) => { this.drawer = ref; }}
-          content={<SideBar navigator={this.navigator} />}
+          content={<SideBar navigator={this.navigator} name={this.state.name} email={this.state.email} />}
           onClose={() => this.closeDrawer()} >
+
+          <View searchBar rounded style={{ margin: 7 }}>
+            <InputGroup>
+              <Icon name='ios-search' />
+              <Input placeholder='Search' />
+              <Button transparent>
+                <Text>Search</Text>
+              </Button>
+            </InputGroup>
+          </View>
+
           <FlatList data={this.state.listChances} onEndReached={this.onEndReached}
             onEndReachedThreshold={0.5}
             keyExtractor={this._keyExtractor}
