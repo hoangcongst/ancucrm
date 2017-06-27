@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { H3, Thumbnail, ListItem, Left, Body, Right } from 'native-base'
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, AsyncStorage } from 'react-native';
+import { withNavigation } from '@expo/ex-navigation';
+@withNavigation
 export default class Sidebar extends Component {
     render() {
         return (
@@ -11,7 +13,7 @@ export default class Sidebar extends Component {
                     <Text>{this.props.email}</Text>
                 </View>
                 <View style={styles.container}>
-                    <ListItem>
+                    <ListItem onPress={() => this.props.navigator.push('main')}>
                         <Left>
                             <Thumbnail small source={require('../../images/icon-menu-flag.png')} />
                         </Left>
@@ -20,7 +22,7 @@ export default class Sidebar extends Component {
                         </Body>
                         <Right></Right>
                     </ListItem>
-                    <ListItem>
+                    <ListItem onPress={() => this.props.navigator.push('contacts')}>
                         <Left>
                             <Thumbnail small source={require('../../images/icon-menu-user.png')} />
                         </Left>
@@ -29,7 +31,12 @@ export default class Sidebar extends Component {
                         </Body>
                         <Right></Right>
                     </ListItem>
-                    <ListItem>
+                    <ListItem onPress={() => {
+                        AsyncStorage.removeItem('@ancucrm:sessionId');
+                        AsyncStorage.removeItem('@ancucrm:name');
+                        AsyncStorage.removeItem('@ancucrm:email');
+                        this.props.navigator.push('login')
+                    }}>
                         <Left>
                             <Thumbnail small source={require('../../images/icon-menu-logout.png')} />
                         </Left>

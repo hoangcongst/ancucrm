@@ -29,8 +29,8 @@ export default class HeaderModule extends Component {
                     <Title>{this.props.title}</Title>
                 </Body>
                 <Right>
-                    <Button transparent>
-                        <Icon name='ios-add' />
+                    <Button transparent onPress={this.props.rightBtnOnPress}>
+                        {this.props.rightButton === undefined ? null : this.props.rightButton()}
                     </Button>
                 </Right>
             </Header>

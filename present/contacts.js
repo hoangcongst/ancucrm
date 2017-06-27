@@ -1,16 +1,16 @@
 import React from 'react';
 import {
-  Container, Content, ListItem, Text, Drawer, H3, Right, Icon,
+  Container, Content, ListItem, Text, Drawer, Right, Icon,
   Body, Toast, InputGroup, Input, Button, Tab, Tabs
 } from 'native-base';
 import {
   View, AsyncStorage, FlatList, ActivityIndicator,
-  TouchableHighlight, Modal
+  TouchableHighlight, Modal, StyleSheet, Image
 } from 'react-native'
 import HeaderModule from './module/header'
 import SideBar from './module/sidebar'
 import * as API from '../config/API'
-export default class Main extends React.Component {
+export default class Contacts extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -30,7 +30,7 @@ export default class Main extends React.Component {
       const email = await AsyncStorage.getItem('@ancucrm:email');
 
       if (value !== null) {
-        let data = await API.fetchPotentials(value)
+        let data = await API.fetchContacts(value)
         if (data.success === true)
           this.setState({
             loading: false,
@@ -41,6 +41,7 @@ export default class Main extends React.Component {
           })
       }
     } catch (error) {
+      console.log(error)
     }
   }
 
@@ -50,11 +51,17 @@ export default class Main extends React.Component {
   */
   onEndReached = async () => {
     this.setState({ loading: true })
-    let data = await API.fetchPotentials(this.state.sessionId, this.state.listChances.length)
+    let data = await API.fetchContacts(this.state.sessionId, this.state.listChances.length)
+    console.log(data)
     if (data.success === true) {
       this.setState({
         loading: false,
         listChances: [...this.state.listChances, ...data.result]
+      })
+    } else {
+      alert('Lỗi kết nối')
+      this.setState({
+        loading: true,
       })
     }
   }
@@ -77,14 +84,23 @@ export default class Main extends React.Component {
       paddingLeft: 10,
     }}>
       <Body>
-        <H3 style={{
-          fontWeight: 'bold',
-          color: '#f9c357'
-        }}>{item.potentialname}</H3>
-        <Text>{item.assign_info.first_name + ' ' + item.assign_info.last_name}</Text>
+        <View style={style.viewItem}>
+          <Image source={require('../images/icon-user.png')} resizeMode={Image.resizeMode.contain}
+            style={{ width: 28, height: 22 }} />
+          <Text>{item.firstname + ' ' + item.lastname}</Text>
+        </View>
+        <View style={style.viewItem}>
+          <Image source={require('../images/icon-mail.png')} resizeMode={Image.resizeMode.contain}
+            style={{ width: 28, height: 22 }} />
+          <Text style={{ fontSize: 13 }}>{item.email}</Text>
+        </View>
+        <View style={style.viewItem}>
+          <Image source={require('../images/icon-phone.png')} resizeMode={Image.resizeMode.contain}
+            style={{ width: 28, height: 22 }} />
+          <Text style={{ fontSize: 13 }}>{item.mobile}</Text>
+        </View>
       </Body>
       <Right>
-        <Text style={{ fontSize: 12 }}>{item.modifiedtime}</Text>
         <Icon name="arrow-forward" />
       </Right>
     </ListItem>
@@ -120,18 +136,11 @@ export default class Main extends React.Component {
   }
   //end popover function
 
-  rightButton = () => {
-    return <Icon name='ios-add' />
-  }
-
-  rightBtnOnPress = () => this.props.navigator.push('createChance')
-
   render() {
     return (
       <Container>
-        <HeaderModule title={'Cơ hội'}
-          openDrawer={this.openDrawer.bind(this)} closeDrawer={this.closeDrawer.bind(this)}
-          rightButton={this.rightButton} rightBtnOnPress={this.rightBtnOnPress} />
+        <HeaderModule title={'Liên hệ'}
+          openDrawer={this.openDrawer.bind(this)} closeDrawer={this.closeDrawer.bind(this)} />
         <Drawer
           ref={(ref) => { this.drawer = ref; }}
           content={<SideBar name={this.state.name} email={this.state.email} />}
@@ -158,3 +167,12 @@ export default class Main extends React.Component {
     );
   }
 }
+
+const style = StyleSheet.create({
+  viewItem: {
+    flex: 1,
+    flexDirection: 'row',
+    margin: 3,
+    alignItems: 'center'
+  }
+})

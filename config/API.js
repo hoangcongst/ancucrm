@@ -51,7 +51,14 @@ export function fetchActivity(data) {
         .then(response => response.json())
 }
 
+export function fetchContacts(sessionName, offset = 0) {
+    return fetch(API_HOST + 'contacts?sessionName=' + sessionName + '&limit=20&offset=' + offset, myInit)
+        .then(response => response.json())
+}
 
+export function createChance() {
+    
+}
 
 
 

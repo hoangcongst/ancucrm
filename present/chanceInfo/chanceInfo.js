@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Content, List, ListItem, Text, H2, H3 } from 'native-base';
-import { View, AsyncStorage } from 'react-native'
+import { View, AsyncStorage, Image } from 'react-native'
 import HeaderModule from '../module/header'
 import * as API from '../../config/API'
 export default class ChanceInfo extends React.Component {
@@ -51,21 +51,21 @@ export default class ChanceInfo extends React.Component {
           </H2>
           <Content style={style.jumbotron}>
             <H3 style={style.info}>Khách hàng</H3>
-            <Text style={style.info}>{obj.contact_info.firstname + ' ' + obj.contact_info.lastname}</Text>
-            <View style={style.lineSeparate} />
-            <Text style={style.info}>{obj.contact_info.email}</Text>
-            <View style={style.lineSeparate} />
-            <Text style={style.info}>{obj.contact_info.mobile}</Text>
+            <CustormerLine name={obj.contact_info.firstname + ' ' + obj.contact_info.lastname}
+              icon={require('../../images/icon-user.png')} />
+
+            <CustormerLine name={obj.contact_info.email}
+              icon={require('../../images/icon-mail.png')} />
+
+            <CustormerLine name={obj.contact_info.mobile}
+              icon={require('../../images/icon-phone.png')} />
           </Content>
           <Content style={style.jumbotron}>
             <H3 style={style.info}>Thông tin</H3>
-            <Text style={style.info}>Ngày tạo: {obj.createdtime}</Text>
-            <View style={style.lineSeparate} />
-            <Text style={style.info}>Ngày sửa: {obj.modifiedtime}</Text>
-            <View style={style.lineSeparate} />
-            <Text style={style.info}>Giao cho: {obj.assign_info.first_name + ' ' + obj.assign_info.last_name}</Text>
-            <View style={style.lineSeparate} />
-            <Text style={style.info}>Mô tả: {obj.description}</Text>
+            <InfoLine title='Ngày tạo' value={obj.createdtime} />
+            <InfoLine title='Ngày sửa' value={obj.modifiedtime} />
+            <InfoLine title='Giao cho' value={obj.assign_info.first_name + ' ' + obj.assign_info.last_name} />
+            <Text style={style.info}>Mô tả {obj.description}</Text>
           </Content>
           <Content style={style.jumbotron}>
             <Text style={style.info} onPress={() => this.props.navigator.push('specificInfo', {
@@ -87,6 +87,35 @@ export default class ChanceInfo extends React.Component {
   }
 }
 
+class CustormerLine extends React.Component {
+  render() {
+    return (
+      <View>
+        <View style={style.viewItem}>
+          <Text style={style.info}>{this.props.name}</Text>
+          <Image source={this.props.icon} resizeMode={Image.resizeMode.contain}
+            style={{ width: 28, height: 22, flex: 1, alignItems: 'flex-end' }} />
+        </View>
+        <View style={style.lineSeparate} />
+      </View>
+    )
+  }
+}
+
+class InfoLine extends React.Component {
+  render() {
+    return (
+      <View>
+        <View style={style.viewItem}>
+          <Text style={style.info}>{this.props.title}</Text>
+          <Text style={{ flex: 8, alignItems: 'center' }}>{this.props.value}</Text>
+        </View>
+        <View style={style.lineSeparate} />
+      </View>
+    )
+  }
+}
+
 const style = {
   jumbotron: {
     borderRadius: 5,
@@ -99,10 +128,17 @@ const style = {
   },
 
   info: {
+    flex: 5,
     margin: 7
   },
   lineSeparate: {
     borderTopWidth: 0.5,
     borderColor: "#CED0CE"
+  },
+  viewItem: {
+    flex: 1,
+    flexDirection: 'row',
+    margin: 3,
+    alignItems: 'center'
   }
 }

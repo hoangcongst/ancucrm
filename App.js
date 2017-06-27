@@ -5,9 +5,11 @@ import {
 } from 'expo'
 import { Container, Content, List, ListItem, Text } from 'native-base';
 import Main from './present/main'
+import Contacts from './present/contacts'
 import Login from './present/login'
 import ChanceInfo from './present/chanceInfo/chanceInfo'
 import SpecificInfo from './present/chanceInfo/specificInfo'
+import CreateChance from './present/createChance'
 import {
   createRouter,
   NavigationProvider,
@@ -16,7 +18,9 @@ import {
 
 const Router = createRouter(() => ({
   main: () => Main,
+  contacts: () => Contacts,
   chanceInfo: () => ChanceInfo,
+  createChance: () => CreateChance,
   login: () => Login,
   specificInfo: () => SpecificInfo,
 }));
